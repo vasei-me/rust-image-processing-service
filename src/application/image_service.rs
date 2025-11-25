@@ -137,6 +137,7 @@ impl<R: ImageRepository> ImageService<R> {
         let processor = ImageProcessor;
         processor.process_image(&original_data, &transformations).await
     }
+    #[allow(dead_code)]
     pub async fn delete_image(&self, image_id: &str, user_id: &str) -> Result<bool, ServiceError> {
     // First verify the image exists and belongs to the user
     let _ = self.get_image(image_id, user_id).await?;

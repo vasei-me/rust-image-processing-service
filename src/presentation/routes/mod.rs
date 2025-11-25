@@ -1,3 +1,9 @@
+// DEPRECATED: This module uses actix-web which conflicts with axum
+// Keeping for reference only - use api module instead
+#![allow(dead_code)]
+#![allow(unused_imports)]
+
+/*
 use actix_web::{web, HttpResponse};
 use std::collections::HashMap;
 
@@ -41,3 +47,4 @@ async fn health_check() -> HttpResponse {
         "database": "SQLite (ACTIVE & CONNECTED)"
     }))
 }
+*/

@@ -42,7 +42,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = api::routes::create_router(user_service, image_service, jwt_service);
 
     // Start server
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
     println!("🌐 Server listening on {}", addr);
     
     axum::serve(

@@ -34,6 +34,7 @@ impl JwtService {
         encode(&Header::default(), &claims, &EncodingKey::from_secret(self.secret.as_ref()))
     }
     
+    #[allow(dead_code)]
     pub fn verify_token(&self, token: &str) -> Result<Claims, jsonwebtoken::errors::Error> {
         let token_data = decode::<Claims>(
             token,

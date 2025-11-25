@@ -62,9 +62,9 @@ pub struct ImageListResponse {
     pub limit: i64,
 }
 
-// هندلرهای احراز هویت
-pub async fn register(
-    State((user_service, jwt_service)): State<(UserService<impl UserRepository>, JwtService)>,
+// Generic handlers
+pub async fn register<UR: UserRepository>(
+    State((user_service, jwt_service)): State<(UserService<UR>, JwtService)>,
     Json(payload): Json<RegisterRequest>,
 ) -> Result<Json<AuthResponse>, ServiceError> {
     let user = user_service.register_user(&payload.username, &payload.password).await?;
@@ -84,8 +84,8 @@ pub async fn register(
     }))
 }
 
-pub async fn login(
-    State((user_service, jwt_service)): State<(UserService<impl UserRepository>, JwtService)>,
+pub async fn login<UR: UserRepository>(
+    State((user_service, jwt_service)): State<(UserService<UR>, JwtService)>,
     Json(payload): Json<LoginRequest>,
 ) -> Result<Json<AuthResponse>, ServiceError> {
     let user = user_service.login_user(&payload.username, &payload.password).await?;
@@ -105,9 +105,9 @@ pub async fn login(
     }))
 }
 
-// هندلرهای ساده برای تست (با user_id واقعی)
-pub async fn upload_image_simple(
-    State(image_service): State<ImageService<impl ImageRepository>>,
+// Simple test handlers
+pub async fn upload_image_simple<IR: ImageRepository>(
+    State(image_service): State<ImageService<IR>>,
     mut multipart: Multipart,
 ) -> Result<Json<ImageResponse>, ServiceError> {
     let mut image_data = Vec::new();
@@ -133,8 +133,7 @@ pub async fn upload_image_simple(
 
     let filename = filename.unwrap_or_else(|| "unknown.jpg".to_string());
     
-    // استفاده از user_id واقعی - اولین کاربری که ثبت‌نام می‌کند
-    let user_id = "ad808fc5-a806-481a-ac15-3ea8fbdc66da"; // user_id کاربر user2
+    let user_id = "ad808fc5-a806-481a-ac15-3ea8fbdc66da";
     
     let image = image_service.upload_image(user_id, &filename, &image_data).await?;
 
@@ -150,12 +149,12 @@ pub async fn upload_image_simple(
     Ok(Json(response))
 }
 
-pub async fn transform_image_simple(
-    State(image_service): State<ImageService<impl ImageRepository>>,
+pub async fn transform_image_simple<IR: ImageRepository>(
+    State(image_service): State<ImageService<IR>>,
     Path(image_id): Path<String>,
     Json(transformations): Json<ImageTransformation>,
 ) -> Result<axum::response::Response, ServiceError> {
-    let user_id = "ad808fc5-a806-481a-ac15-3ea8fbdc66da"; // user_id کاربر user2
+    let user_id = "ad808fc5-a806-481a-ac15-3ea8fbdc66da";
     let processed_image = image_service.transform_image(&image_id, user_id, transformations).await?;
     
     Ok(axum::response::Response::builder()
@@ -165,11 +164,11 @@ pub async fn transform_image_simple(
         .unwrap())
 }
 
-pub async fn get_image_simple(
-    State(image_service): State<ImageService<impl ImageRepository>>,
+pub async fn get_image_simple<IR: ImageRepository>(
+    State(image_service): State<ImageService<IR>>,
     Path(image_id): Path<String>,
 ) -> Result<axum::response::Response, ServiceError> {
-    let user_id = "ad808fc5-a806-481a-ac15-3ea8fbdc66da"; // user_id کاربر user2
+    let user_id = "ad808fc5-a806-481a-ac15-3ea8fbdc66da";
     let (image, image_data) = image_service.get_image(&image_id, user_id).await?;
     
     Ok(axum::response::Response::builder()
@@ -180,14 +179,14 @@ pub async fn get_image_simple(
         .unwrap())
 }
 
-pub async fn list_images_simple(
-    State(image_service): State<ImageService<impl ImageRepository>>,
+pub async fn list_images_simple<IR: ImageRepository>(
+    State(image_service): State<ImageService<IR>>,
     Query(params): Query<PaginationParams>,
 ) -> Result<Json<ImageListResponse>, ServiceError> {
     let page = params.page.unwrap_or(1);
     let limit = params.limit.unwrap_or(10).min(100);
     
-    let user_id = "ad808fc5-a806-481a-ac15-3ea8fbdc66da"; // user_id کاربر user2
+    let user_id = "ad808fc5-a806-481a-ac15-3ea8fbdc66da";
     let images = image_service.list_images(user_id, page, limit).await?;
     
     let image_responses: Vec<ImageResponse> = images.into_iter().map(|image| ImageResponse {
@@ -209,23 +208,28 @@ pub async fn list_images_simple(
     }))
 }
 
-// هندلرهای اصلی (برای آینده)
+// Main handlers (for future use)
+#[allow(dead_code)]
 pub async fn upload_image() -> &'static str {
     "Upload image endpoint (with auth) - Coming soon"
 }
 
+#[allow(dead_code)]
 pub async fn transform_image() -> &'static str {
     "Transform image endpoint (with auth) - Coming soon"
 }
 
+#[allow(dead_code)]
 pub async fn get_image() -> &'static str {
     "Get image endpoint (with auth) - Coming soon"
 }
 
+#[allow(dead_code)]
 pub async fn list_images() -> &'static str {
     "List images endpoint (with auth) - Coming soon"
 }
 
+#[allow(dead_code)]
 pub async fn delete_image() -> &'static str {
     "Delete image endpoint (with auth) - Coming soon"
 }

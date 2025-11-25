@@ -17,6 +17,7 @@ pub enum ServiceError {
     #[error("Image processing error: {0}")]
     ImageProcessingError(String),
     
+    #[allow(dead_code)]
     #[error("Unauthorized")]
     Unauthorized,
 }

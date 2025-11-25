@@ -49,5 +49,6 @@ pub trait ImageRepository: Send + Sync {
     async fn create_image(&self, image: &Image) -> Result<Image, crate::core::error::ServiceError>;
     async fn find_by_id(&self, id: &str) -> Result<Option<Image>, crate::core::error::ServiceError>;
     async fn find_by_user_id(&self, user_id: &str, page: i64, limit: i64) -> Result<Vec<Image>, crate::core::error::ServiceError>;
+    #[allow(dead_code)]
     async fn delete_image(&self, id: &str, user_id: &str) -> Result<bool, crate::core::error::ServiceError>;
 }

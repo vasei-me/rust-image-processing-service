@@ -41,6 +41,7 @@ impl<R: UserRepository> UserService<R> {
         Ok(user)
     }
     
+    #[allow(dead_code)]
     pub async fn get_user_profile(&self, user_id: &Uuid) -> Result<User, ServiceError> {
         let user = self.user_repository.find_by_id(user_id).await?
             .ok_or_else(|| ServiceError::ValidationError("User not found".to_string()))?;

@@ -6,6 +6,7 @@ use axum::{
 };
 use crate::core::jwt::JwtService;
 
+#[allow(dead_code)]
 pub async fn auth_middleware(
     headers: HeaderMap,
     mut request: Request,
