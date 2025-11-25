@@ -1,0 +1,7 @@
+/target/
+*.db
+.env
+/uploads/
+.DS_Store
+.vscode/
+*.log
