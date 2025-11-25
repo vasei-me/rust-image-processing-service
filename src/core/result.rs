@@ -1,0 +1,1 @@
+pub type ServiceResult<T> = std::result::Result<T, crate::core::error::ServiceError>;
