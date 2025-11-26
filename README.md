@@ -156,3 +156,7 @@ cargo test
 ```bash
 cargo build --release
 ```
+
+This is a solution for the Image Processing Service project on roadmap.sh.
+
+**Project URL:** https://roadmap.sh/projects/image-processing-service
